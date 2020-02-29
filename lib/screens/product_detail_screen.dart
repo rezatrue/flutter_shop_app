@@ -12,7 +12,7 @@ static const routeName = '/product-detail';
   @override
   Widget build(BuildContext context) {
     final productId = ModalRoute.of(context).settings.arguments as String;
-    final loadedProduct = Provider.of<Products>(context).findByid(productId);
+    final loadedProduct = Provider.of<Products>(context, listen: false).findByid(productId);
     return Scaffold(
       appBar: AppBar(title: Text(loadedProduct.title)),
       
