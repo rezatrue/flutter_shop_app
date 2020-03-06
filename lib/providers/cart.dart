@@ -3,12 +3,14 @@ import 'package:flutter/foundation.dart';
 
 class CardItem{
   String id;
+  String productId;
   String title;
   double price;
   int quantity;
 
   CardItem({
-    @required this.id, 
+    @required this.id,
+    @required this.productId, 
     @required this.title, 
     @required this.price, 
     @required this.quantity
@@ -33,6 +35,14 @@ class Cart with ChangeNotifier{
       total += cardItem.price * cardItem.quantity;
     });
     return total;
+  }
+
+  void removeItem(String productId){
+    if(productId != null){
+      _items.removeWhere((_, item) => item.id == productId );
+    }
+    //_items.remove(productId);
+    notifyListeners();
   }
 
   void addItem(String productId, String title, double price,){
