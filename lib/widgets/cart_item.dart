@@ -4,12 +4,12 @@ import 'package:provider/provider.dart';
 
 class CartItem extends StatelessWidget {
   final String id;
-  final String productId;
+  //final String productId;
   final double price;
   final int quantity;
   final String title;
 
-  CartItem({this.id, this.price, this.productId, this.quantity, this.title});
+  CartItem({this.id, this.price, this.quantity, this.title});
 
   @override
   Widget build(BuildContext context) {

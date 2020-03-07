@@ -22,7 +22,7 @@ class CartScreen extends StatelessWidget {
                 children: <Widget>[
                   Text('Total', style: TextStyle(fontSize: 20),),
                   Spacer(),
-                  Chip(label: Text('\$${cart.totalAmount}', style: Theme.of(context).primaryTextTheme.title,),
+                  Chip(label: Text('\$${cart.totalAmount.toStringAsFixed(2)}', style: Theme.of(context).primaryTextTheme.title,),
                   backgroundColor: Theme.of(context).primaryColor,),
                   FlatButton(
                     child: Text('ORDER NOW'), 
@@ -41,7 +41,7 @@ class CartScreen extends StatelessWidget {
               itemCount: cart.items.length,
               itemBuilder: (ctx, index) => CartItem(
                   id: cart.items.values.toList()[index].id,
-                  productId: cart.items.keys.toList()[index],
+                  //productId: cart.items.keys.toList()[index],
                   title: cart.items.values.toList()[index].title,
                   price: cart.items.values.toList()[index].price,
                   quantity: cart.items.values.toList()[index].quantity,

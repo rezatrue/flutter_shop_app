@@ -3,14 +3,14 @@ import 'package:flutter/foundation.dart';
 
 class CartItem{
   String id;
-  String productId;
+  //String productId;
   String title;
   double price;
   int quantity;
 
   CartItem({
     @required this.id,
-    @required this.productId, 
+    //@required this.productId, 
     @required this.title, 
     @required this.price, 
     @required this.quantity
