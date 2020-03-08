@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../providers/cart.dart';
-import '../screens/product_detail_screen.dart';
 import 'package:provider/provider.dart';
-import '../providers/product.dart';
 
+import '../screens/product_detail_screen.dart';
+import '../providers/product.dart';
+import '../providers/cart.dart';
 
 class ProductItem extends StatelessWidget {
   // final String id;
@@ -15,14 +15,14 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
-    final card = Provider.of<Cart>(context, listen: false);
+    final cart = Provider.of<Cart>(context, listen: false);
     return ClipRRect(
       borderRadius: BorderRadius.circular(25),
       child: GridTile( 
         child: GestureDetector(
           onTap: () => {
             Navigator.of(context).pushNamed(ProductDetailedScreen.routeName, arguments: product.id)
-            } ,
+            },
           child: Image.network(product.imageUrl, fit: BoxFit.cover,)
           ),
         footer: GridTileBar(
@@ -31,14 +31,25 @@ class ProductItem extends StatelessWidget {
               builder:(ctx, product, _) => IconButton(
               icon: Icon(product.isFavorite ? Icons.favorite : Icons.favorite_border),
               color: Theme.of(context).accentColor,
-              onPressed: () => product.toggleFavoriteStatus()),
+              onPressed: () => product.toggleFavoriteStatus()
+              ),
           ),
           title: Text(product.title, textAlign: TextAlign.center,),
           trailing: IconButton(
             icon: Icon(Icons.shopping_cart),
             color: Theme.of(context).accentColor,
             onPressed: (){
-              card.addItem(product.id, product.title, product.price);
+              cart.addItem(product.id, product.title, product.price);
+              Scaffold.of(context).hideCurrentSnackBar();
+              Scaffold.of(context).showSnackBar(SnackBar(
+                content: Text('Added item to the Cart'),
+                duration: Duration(seconds: 2),
+                action: SnackBarAction(
+                  label: 'UNDO', 
+                  onPressed: () {
+                      cart.removeSingleItem(product.id);
+                  }),),
+                );
             }),
           ),
       ),

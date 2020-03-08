@@ -3,14 +3,12 @@ import 'package:flutter/foundation.dart';
 
 class CartItem{
   String id;
-  //String productId;
   String title;
   double price;
   int quantity;
 
   CartItem({
     @required this.id,
-    //@required this.productId, 
     @required this.title, 
     @required this.price, 
     @required this.quantity
@@ -18,6 +16,8 @@ class CartItem{
 }
 
 class Cart with ChangeNotifier{
+  // sence we don't need to add different CartItem for same type of 
+  // product (increasing product quantity will do the job) , we use productId as Map key
   Map<String, CartItem> _items = {};
 
 
@@ -45,6 +45,25 @@ class Cart with ChangeNotifier{
     notifyListeners();
   }
 
+  void removeSingleItem(String productId){
+    print('id ' + productId);
+    if(!_items.containsKey(productId)) {
+      print('return ' + productId);
+      return;
+    }
+    if(_items[productId].quantity > 1){
+      _items.update(productId, (exextingItem) => CartItem(
+        id: exextingItem.id, title: exextingItem.title, price: exextingItem.price, quantity: exextingItem.quantity -1 ));
+    print('id -i' + productId);
+    }
+    else {
+       _items.remove(productId); // remove by CartItem key
+      //_items.removeWhere((_, item) => item.id == productId ); // remove using product ID
+      print('id removed ' + productId);
+    }
+    notifyListeners();
+  }
+   
   void addItem(String productId, String title, double price,){
     if(_items.containsKey(productId)){
       _items.update(productId, 
