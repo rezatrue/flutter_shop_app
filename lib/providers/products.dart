@@ -91,4 +91,9 @@ void updateProduct(String id, Product newProduct){
 
 }
 
+void deleteProduct(String id){
+  _items.removeWhere((prod) => prod.id == id);
+  notifyListeners();
+}
+
 }
