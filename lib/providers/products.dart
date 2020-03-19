@@ -118,9 +118,18 @@ class Products with ChangeNotifier {
     }
   }
 
-void updateProduct(String id, Product newProduct){
+Future<void> updateProduct(String id, Product newProduct) async {
+  
   final prodIndex = _items.indexWhere((prod) => prod.id == id);
   if(prodIndex >= 0){
+    final url = 'https://myshop-59cad.firebaseio.com/products/$id.json';
+    http.patch(url, body: json.encode({
+      'title' : newProduct.title,
+      'description' : newProduct.description,
+      'imageUrl' : newProduct.imageUrl,
+      'price': newProduct.price,
+      })
+    );
     _items[prodIndex] = newProduct ;
     notifyListeners();
   } else {
@@ -130,8 +139,18 @@ void updateProduct(String id, Product newProduct){
 }
 
 void deleteProduct(String id){
-  _items.removeWhere((prod) => prod.id == id);
+  final url = 'https://myshop-59cad.firebaseio.com/products/$id.json';
+  final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
+  var exsitingProduct = _items[existingProductIndex];
+  _items.removeAt(existingProductIndex);
   notifyListeners();
+  http.delete(url).then((_){
+    exsitingProduct = null;
+  }).catchError((_){
+    _items.insert(existingProductIndex, exsitingProduct);
+    notifyListeners();
+  });
+  
 }
 
 }
