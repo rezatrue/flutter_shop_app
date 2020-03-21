@@ -37,7 +37,7 @@ Product({
       if(response.statusCode >= 400){
         _setFavValue(oldStatus);
       }
-    }catch{
+    }catch (error){
       _setFavValue(oldStatus);
     }
     
