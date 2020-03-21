@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../models/http_exception.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import './product.dart';
@@ -138,18 +139,21 @@ Future<void> updateProduct(String id, Product newProduct) async {
 
 }
 
-void deleteProduct(String id){
+Future<void> deleteProduct(String id) async {
   final url = 'https://myshop-59cad.firebaseio.com/products/$id.json';
   final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
   var exsitingProduct = _items[existingProductIndex];
+  
   _items.removeAt(existingProductIndex);
   notifyListeners();
-  http.delete(url).then((_){
-    exsitingProduct = null;
-  }).catchError((_){
+
+  final response = await http.delete(url);
+  if(response.statusCode >= 400){
     _items.insert(existingProductIndex, exsitingProduct);
     notifyListeners();
-  });
+    throw HttpException();
+  }
+  exsitingProduct = null;
   
 }
 
