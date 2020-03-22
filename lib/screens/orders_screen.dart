@@ -21,7 +21,6 @@ class OrdersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('object');
     //final orderData = Provider.of<Orders>(context);
     return Scaffold(
       appBar: AppBar(title: Text('Your Order'),),
