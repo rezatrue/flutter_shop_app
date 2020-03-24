@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
+import 'package:provider/provider.dart';
+import '../providers/auth.dart';
 
 class AuthScreen extends StatelessWidget {
   static const String routeName = '/auth';
@@ -92,11 +94,26 @@ class _AuthCardState extends State<AuthCard> {
     'email' : '', 'password' : '',
   };
 
-  void _submit(){
+  Future<void> _submit() async {
     if(!_formKey.currentState.validate()){
       // Invalid
       return;
     }
+
+    _formKey.currentState.save();
+    setState(() {
+      _isLoading = true;
+    });
+    if(_authData == AuthMode.Login){
+      // ......
+    }else {
+      Provider.of<Auth>(context, listen: false)
+        .signup(_authData['email'], _authData['password']); 
+    }
+    setState(() {
+      _isLoading = false;
+    });
+
   }
 
   void _switchAuthMode() {
@@ -153,7 +170,7 @@ class _AuthCardState extends State<AuthCard> {
                               decoration: InputDecoration(labelText: 'Confirm Password'),
                               validator: _authMode == AuthMode.Signup 
                                   ? (value) {
-                                    if(value != _passwordController) return 'Password do not match!';
+                                    if(value != _passwordController.text) return 'Password do not match!';
                                   }
                                   : null,
                             ),
