@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shop_app/models/http_exception.dart';
 import 'dart:math';
 import 'package:provider/provider.dart';
 import '../providers/auth.dart';
@@ -90,6 +91,22 @@ class _AuthCardState extends State<AuthCard> {
   var _authMode = AuthMode.Login;
   var _isLoading = false;
 
+  void _showErrorDialog(String message){
+    showDialog(context: context, builder: 
+    (ctx) => AlertDialog(
+      title: Text('An Error Occoured'), 
+      content: Text(message),
+      actions: <Widget>[
+        RaisedButton(
+          child: Text('OK'), 
+          onPressed: (){
+            Navigator.of(ctx).pop();
+          })
+      ],
+      )
+    );
+  }
+
   Map<String, String> _authData = {
     'email' : '', 'password' : '',
   };
@@ -104,13 +121,27 @@ class _AuthCardState extends State<AuthCard> {
     setState(() {
       _isLoading = true;
     });
-    if(_authMode == AuthMode.Login){
+
+    try{
+      if(_authMode == AuthMode.Login){
       Provider.of<Auth>(context, listen: false)
         .signin(_authData['email'], _authData['password']); 
-    }else {
+      }else {
       Provider.of<Auth>(context, listen: false)
         .signup(_authData['email'], _authData['password']); 
     }
+    } on HttpException catch (error){
+      var errorMessage = 'Authentication failed';
+      if(error.toString().contains('EMAIL_EXISTS')) errorMessage = 'The email is already exists';
+      if(error.toString().contains('EMAIL_NOT_FOUND')) errorMessage = 'Email Address not found';
+      if(error.toString().contains('INVALID_PASSWORD')) errorMessage = 'Invalid password';
+      if(error.toString().contains('USER_DISABLED')) errorMessage = 'User is disabled';
+      _showErrorDialog(errorMessage);
+    }catch (error){
+      var errorMessage = 'Counld not Authenticate please try later';
+      _showErrorDialog(errorMessage);
+    }
+    
     setState(() {
       _isLoading = false;
     });
