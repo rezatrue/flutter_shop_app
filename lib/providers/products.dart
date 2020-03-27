@@ -127,7 +127,7 @@ Future<void> updateProduct(String id, Product newProduct) async {
   
   final prodIndex = _items.indexWhere((prod) => prod.id == id);
   if(prodIndex >= 0){
-    final url = 'https://myshop-59cad.firebaseio.com/products/$id.json';
+    final url = 'https://myshop-59cad.firebaseio.com/products/$id.json?auth=$authToken';
     http.patch(url, body: json.encode({
       'title' : newProduct.title,
       'description' : newProduct.description,
@@ -144,7 +144,7 @@ Future<void> updateProduct(String id, Product newProduct) async {
 }
 
 Future<void> deleteProduct(String id) async {
-  final url = 'https://myshop-59cad.firebaseio.com/products/$id.json';
+  final url = 'https://myshop-59cad.firebaseio.com/products/$id.json?auth=$authToken';
   final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
   var exsitingProduct = _items[existingProductIndex];
   
