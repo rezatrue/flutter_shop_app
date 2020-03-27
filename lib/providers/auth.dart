@@ -9,7 +9,7 @@ class Auth with ChangeNotifier {
   DateTime _expireDate;
   String _userId;
 
-  final String apiKey = 'AIzaSyAp0cYy5r-4nty96Mx_dgbbAmcC68XMu9A'; // api key
+  final String apiKey = ''; // api key
 
   String get token {
     if(_token != null && _expireDate != null 

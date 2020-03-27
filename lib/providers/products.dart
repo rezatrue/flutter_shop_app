@@ -43,6 +43,9 @@ class Products with ChangeNotifier {
   ];
 
  // var _showFavoriteOnly = false;
+  Products(this.authToken, this._items);
+
+  String authToken;
 
   List<Product> get items {
     // if(_showFavoriteOnly){
@@ -73,7 +76,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchAndSetProducts() async {
-    const url = 'https://myshop-59cad.firebaseio.com/products.json';
+    final url = 'https://myshop-59cad.firebaseio.com/products.json?auth=$authToken';
     try{
       final products = await http.get(url);
       final extractedData = json.decode(products.body) as Map<String, dynamic>;
@@ -93,7 +96,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProducts(Product product) async {
-    const url = 'https://myshop-59cad.firebaseio.com/products.json';
+    final url = 'https://myshop-59cad.firebaseio.com/products.json?auth=$authToken';
     try{
     final response = await http.post(url, body: json.encode({
       'title' : product.title,
