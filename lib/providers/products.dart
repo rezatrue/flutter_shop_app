@@ -43,9 +43,10 @@ class Products with ChangeNotifier {
   ];
 
  // var _showFavoriteOnly = false;
-  Products(this.authToken, this._items);
+  Products(this.authToken,this.userId, this._items);
 
   String authToken;
+  String userId;
 
   List<Product> get items {
     // if(_showFavoriteOnly){
@@ -76,16 +77,22 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchAndSetProducts() async {
-    final url = 'https://myshop-59cad.firebaseio.com/products.json?auth=$authToken';
+    var url = 'https://myshop-59cad.firebaseio.com/products.json?auth=$authToken';
     try{
       final products = await http.get(url);
       final extractedData = json.decode(products.body) as Map<String, dynamic>;
       if(extractedData == null) return;
+      url = 'https://myshop-59cad.firebaseio.com/userFavorites/$userId.json?auth=$authToken';
+      final favoriteReponse = await http.get(url);
+      final favoriteData = json.decode(favoriteReponse.body);
+      print(favoriteData);
+      
       final List<Product> loadedProducts = [];
       extractedData.forEach((prodId, prodData){
         loadedProducts.add(Product(id: prodId, title: prodData['title'], 
         description: prodData['description'], price: prodData['price'], 
-        isFavorite: prodData['isFavorite'], imageUrl: prodData['imageUrl']));
+        isFavorite: favoriteData == null ? false : favoriteData[prodId] ?? false, 
+        imageUrl: prodData['imageUrl']));
       });
       _items = loadedProducts;
       notifyListeners();
@@ -103,7 +110,6 @@ class Products with ChangeNotifier {
       'description' : product.description,
       'imageUrl' : product.imageUrl,
       'price': product.price,
-      'isFavorite' : product.isFavorite,
     }), );
     
     print(json.decode(response.body));

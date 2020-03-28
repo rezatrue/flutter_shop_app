@@ -23,15 +23,15 @@ Product({
     notifyListeners();
   }
 
-  Future<void> toggleFavoriteStatus(String token) async {
+  Future<void> toggleFavoriteStatus(String token, String userId) async {
     bool oldStatus = isFavorite;
     _setFavValue(!oldStatus);
 
-    final url = 'https://myshop-59cad.firebaseio.com/products/$id.json?auth=$token';
+    final url = 'https://myshop-59cad.firebaseio.com/userFavorites/$userId/$id.json?auth=$token';
     try{
-      final response = await http.patch(url, body: json.encode({
-        'isFavorite' : isFavorite,
-        })
+      final response = await http.put(url, body: json.encode(
+        isFavorite,
+        )
       );
 
       if(response.statusCode >= 400){
