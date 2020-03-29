@@ -76,17 +76,21 @@ class Products with ChangeNotifier {
     return _items.firstWhere((prod) => prod.id == id);
   }
 
-  Future<void> fetchAndSetProducts() async {
-    var url = 'https://myshop-59cad.firebaseio.com/products.json?auth=$authToken';
+  Future<void> fetchAndSetProducts([bool filterByUser = false]) async {
+    final String filterString = filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
+    var url =
+        'https://myshop-59cad.firebaseio.com/products.json?auth=$authToken&$filterString';
     try{
       final products = await http.get(url);
       final extractedData = json.decode(products.body) as Map<String, dynamic>;
       if(extractedData == null) return;
-      url = 'https://myshop-59cad.firebaseio.com/userFavorites/$userId.json?auth=$authToken';
-      final favoriteReponse = await http.get(url);
-      final favoriteData = json.decode(favoriteReponse.body);
-      print(favoriteData);
-      
+
+      url =
+          'https://myshop-59cad.firebaseio.com/userFavorites/$userId.json?auth=$authToken';
+      final favoriteResponse = await http.get(url);
+      final favoriteData = json.decode(favoriteResponse.body) as Map<String, dynamic>;
+
+      //Map<String, String> favoriteData;
       final List<Product> loadedProducts = [];
       extractedData.forEach((prodId, prodData){
         loadedProducts.add(Product(id: prodId, title: prodData['title'], 
@@ -110,6 +114,7 @@ class Products with ChangeNotifier {
       'description' : product.description,
       'imageUrl' : product.imageUrl,
       'price': product.price,
+      'creatorId' : userId,
     }), );
     
     print(json.decode(response.body));
