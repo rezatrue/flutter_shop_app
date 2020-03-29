@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../models/http_exception.dart';
@@ -8,6 +9,7 @@ class Auth with ChangeNotifier {
   String _token;
   DateTime _expireDate;
   String _userId;
+  Timer _authTimer;
 
   final String apiKey = ''; // api key
 
@@ -45,6 +47,7 @@ class Auth with ChangeNotifier {
       _token = responseData['idToken'];
       _userId = responseData['localId'];
       _expireDate = DateTime.now().add(Duration(seconds: int.parse(responseData['expiresIn'])));
+      _autoLogout();
       notifyListeners();
     }
     catch (error){
@@ -66,7 +69,16 @@ class Auth with ChangeNotifier {
     _token = null;
     _userId = null;
     _expireDate  = null;
+    _authTimer = null;
     notifyListeners();
+  }
+
+  void _autoLogout(){
+    if(_authTimer != null){
+      _authTimer = null;
+    }
+    final _timeToExpiry = _expireDate.difference(DateTime.now()).inSeconds; 
+    _authTimer = Timer(Duration(seconds: _timeToExpiry), logout);
   }
 
 }
