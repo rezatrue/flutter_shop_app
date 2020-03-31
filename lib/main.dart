@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
             : FutureBuilder(
                 future: auth.tryAutoLogin(),
                 builder: (ctx, autoResultSnapshot) => 
-                  autoResultSnapshot.connectionState == ConnectionState.waiting 
+                  autoResultSnapshot.connectionState == ConnectionState.waiting
                     ? SplashScreen() 
                     : AuthScreen()
                     ) ,

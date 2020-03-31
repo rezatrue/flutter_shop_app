@@ -83,7 +83,7 @@ class Auth with ChangeNotifier {
     _token = extractedUserData['token'];
     _userId = extractedUserData['userId'];
     _expireDate = expirydate;
-
+    print('login info : - token : ' + _token + '; useId : ' + _userId + '; expaire Date : ' + _expireDate.toIso8601String());
     notifyListeners();
     _autoLogout();
     return true;
