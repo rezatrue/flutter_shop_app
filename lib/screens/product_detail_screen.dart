@@ -21,7 +21,10 @@ static const routeName = '/product-detail';
               expandedHeight: 300,
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
-                title: Text(loadedProduct.title),
+                title: Container(
+                  padding: EdgeInsets.symmetric(vertical: 3, horizontal: 20),
+                  child: Text(loadedProduct.title),
+                  decoration: BoxDecoration(color: Colors.black45, borderRadius: BorderRadius.circular(15)), ),
                 background: Hero(
                         tag: loadedProduct.id,
                         child: Image.network(loadedProduct.imageUrl, fit: BoxFit.cover)
