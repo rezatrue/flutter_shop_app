@@ -14,7 +14,7 @@ class OrderItem extends StatefulWidget {
 
 var _expanded = false;
 
-class _OrderItemState extends State<OrderItem> with SingleTickerProviderStateMixin{
+class _OrderItemState extends State<OrderItem>{
 
   @override
   Widget build(BuildContext context) {
